@@ -26,16 +26,22 @@ export const initChatListener = async () => {
   );
 
   const twitchApi = new ApiClient({ authProvider });
-  // const Bpubsub = new BasicPubSubClient({});
-  // const pubsub = new PubSubClient(Bpubsub);
+  const Bpubsub = new BasicPubSubClient({});
+  const pubsub = new PubSubClient(Bpubsub);
 
-  // const userId = await pubsub.registerUserListener(authProvider);
+  const userId = await pubsub.registerUserListener(authProvider);
 
-  // Bpubsub.connect();
+  Bpubsub.connect();
+  Bpubsub.onConnect(() => console.log("Pubsub: connected ✅"));
 
-  // pubsub.onRedemption(userId, () => {
-  //   console.log("oof");
-  // });
+  const listener = await pubsub.onRedemption(userId, (message) => {
+    console.log(message.rewardId);
+    if (message.rewardId === "6838e09d-37aa-47de-9920-8fd517b096f1") {
+      addRequest(io, message.userName, message.message, true);
+    } else if (message.rewardId === "") {
+      addRequest(io, message.userName, message.message, false);
+    }
+  });
 
   const channel = await twitchApi.users.getMe().then((res) => res.name);
   const chatClient = new ChatClient({ authProvider, channels: [channel] });
