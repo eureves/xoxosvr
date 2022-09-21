@@ -1,4 +1,5 @@
-import { RefreshingAuthProvider, StaticAuthProvider } from "@twurple/auth";
+import { RefreshingAuthProvider } from "@twurple/auth";
+import { BasicPubSubClient, PubSubClient } from "@twurple/pubsub";
 import { ApiClient } from "@twurple/api";
 import { ChatClient } from "@twurple/chat";
 import DataBase from "../db";
@@ -25,9 +26,18 @@ export const initChatListener = async () => {
   );
 
   const twitchApi = new ApiClient({ authProvider });
+  const Bpubsub = new BasicPubSubClient({});
+  const pubsub = new PubSubClient(Bpubsub);
+
+  const userId = await pubsub.registerUserListener(authProvider);
+
+  Bpubsub.connect();
+
+  pubsub.onRedemption(userId, () => {
+    console.log("oof");
+  });
 
   const channel = await twitchApi.users.getMe().then((res) => res.name);
-
   const chatClient = new ChatClient({ authProvider, channels: [channel] });
   await chatClient.connect().then(() => console.log("Chat: connected ✅"));
 

@@ -42,7 +42,7 @@ router.get("/oauth/twitch", async (req, res) => {
 
 router.get("/auth", (req, res) => {
   res.redirect(
-    `https://id.twitch.tv/oauth2/authorize?client_id=${process.env.TWITCH_CLIENT_ID}&redirect_uri=${process.env.TWITCH_REDIRECT_URI}&response_type=code&scope=chat:read+chat:edit`
+    `https://id.twitch.tv/oauth2/authorize?client_id=${process.env.TWITCH_CLIENT_ID}&redirect_uri=${process.env.TWITCH_REDIRECT_URI}&response_type=code&scope=chat:read+chat:edit+channel:read:redemptions`
   );
 });
 
