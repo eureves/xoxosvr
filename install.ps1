@@ -8,6 +8,6 @@ if (!(Test-Path -Path ".\dist\public\dashboard") -and !(Test-Path -Path ".\dist\
     New-Item -Path ".\dist\public\svrwidget" -ItemType Directory
 }
 
-Move-Item -Path ".\views\dashboard\build\*" -Destination ".\dist\public\dashboard" 
-Move-Item -Path ".\views\svrwidget\build\*" -Destination ".\dist\public\svrwidget" 
+Move-Item -Path ".\views\dashboard\build\*" -Destination ".\dist\public\dashboard" -Force 
+Move-Item -Path ".\views\svrwidget\build\*" -Destination ".\dist\public\svrwidget" -Force 
 
