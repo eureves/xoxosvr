@@ -29,6 +29,7 @@ class DataBase {
 
   public async setToken(userToken: AccessToken) {
     await this.db.push("/userToken", userToken);
+    await this.db.push("/requests", []);
   }
 
   public async getToken(): Promise<AccessToken> {
@@ -59,7 +60,7 @@ class DataBase {
     }
   }
 
-  public getRequests(): Promise<IRequest[]> {
+  public async getRequests(): Promise<IRequest[]> {
     return this.db.getData("/requests");
   }
 }

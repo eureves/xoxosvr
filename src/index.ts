@@ -21,7 +21,7 @@ app.use("/static", express.static(join(__dirname, "public")));
 app.use(router);
 
 export const io = new Server(server, {
-  cors: { origin: "http://localhost:3000", methods: ["GET", "POST"] },
+  cors: { origin: "*", methods: ["GET", "POST"] },
 });
 
 initChatListener();

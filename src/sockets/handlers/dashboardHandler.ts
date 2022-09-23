@@ -13,6 +13,18 @@ const dashboardHandler = (io: Server, socket: Socket) => {
     socket.emit("dashboard:sendRequests", await db.getRequests());
     io.emit("media:sent", await DataBase.getNextRequest());
   });
+
+  socket.on("dashboard:volume", (volume) => {
+    io.emit("dashboard:playerVolume", volume);
+  });
+
+  socket.on("dashboard:progress", (progress) => {
+    io.emit("dashboard:playerProgress", progress / 100);
+  });
+
+  socket.on("player:progressChange", (progress) => {
+    io.emit("dashboard:progressChange", progress * 100);
+  });
 };
 
 export default dashboardHandler;

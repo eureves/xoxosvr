@@ -4,7 +4,20 @@ import { Server } from "socket.io";
 import DataBase from "../db";
 
 export const addRequest = async (io: Server, user: string, message: string, hidden: boolean) => {
-  const requestMessage = message.slice(4);
+  let requestMessage: string;
+
+  const youtubeUrlRegExp = new RegExp(
+    "(?:watch\\?v=|v\\/|embed\\/|ytscreeningroom\\?v=|\\?v=|\\?vi=|e\\/|watch\\?.*vi?=|\\?feature=[a-z_]*&v=|vi\\/)([a-zA-Z0-9\\-\\_]{11})"
+  );
+  if (message.startsWith("!sr ") || message.startsWith("!vr ")) {
+    requestMessage = message.slice(4);
+  } else {
+    requestMessage = message;
+  }
+
+  if (requestMessage.match(youtubeUrlRegExp)) {
+    requestMessage = requestMessage.match(youtubeUrlRegExp)[1];
+  }
 
   const filters = await ytsr.getFilters(requestMessage);
   const filter = filters.get("Type")?.get("Video");
