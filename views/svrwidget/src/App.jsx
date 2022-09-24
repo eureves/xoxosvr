@@ -52,11 +52,11 @@ function SongRequest() {
         <>
           {media.hidden ? (
             <div
-              className="flex flex-col h-screen w-screen absolute items-center justify-center"
+              className="flex gap-6 h-screen w-screen absolute items-center justify-center"
               style={media.hidden ? { visibility: "visible" } : { visibility: "hidden" }}
             >
               <ProgressIcon size={500} played={progressRange} image={media.imageUrl}></ProgressIcon>
-              <p className="text-9xl text-screen mt-10 font-bold text-white text-center drop-shadow-[0_5px_5px_rgba(0,0,0,1)]">
+              <p className="flex text-9xl font-bold text-white text-center drop-shadow-[0_5px_5px_rgba(0,0,0,1)]">
                 {media.title}
               </p>
             </div>
