@@ -43,15 +43,15 @@ export const initChatListener = async () => {
     }
   });
 
-  const channel = await twitchApi.users.getMe().then((res) => res.name);
-  const chatClient = new ChatClient({ authProvider, channels: [channel] });
-  await chatClient.connect().then(() => console.log("Chat: connected ✅"));
+  // const channel = await twitchApi.users.getMe().then((res) => res.name);
+  // const chatClient = new ChatClient({ authProvider, channels: [channel] });
+  // await chatClient.connect().then(() => console.log("Chat: connected ✅"));
 
-  chatClient.onMessage((channel, user, message) => {
-    if (message.startsWith("!sr")) {
-      addRequest(io, user, message, true);
-    } else if (message.startsWith("!vr")) {
-      addRequest(io, user, message, false);
-    }
-  });
+  // chatClient.onMessage((channel, user, message) => {
+  //   if (message.startsWith("!sr")) {
+  //     addRequest(io, user, message, true);
+  //   } else if (message.startsWith("!vr")) {
+  //     addRequest(io, user, message, false);
+  //   }
+  // });
 };
