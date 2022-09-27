@@ -55,10 +55,10 @@ const App = () => {
           return (
             <li
               key={e.id}
-              className="flex items-center gap-2 rounded-xl my-1 pr-1 pl-1 text-black text-sm"
+              className="flex items-center gap-2 rounded-xl my-1 pr-1 pl-1 text-black text-sm sm:text-xl"
             >
               <p>{e.hidden ? "S" : "V"}</p>
-              <a className="hidden xxs:block  xxs:shrink-0" href={e.url}>
+              <a className="hidden xxs:block xxs:shrink-0" href={e.url}>
                 <img
                   className="object-cover w-8 h-8 sm:w-20 sm:h-20"
                   src={e.thumbnail}
@@ -67,7 +67,7 @@ const App = () => {
               </a>
               <div className="shrink overflow-hidden">
                 <p className="overflow-hidden overflow-ellipsis">{e.user}</p>
-                <p className="overflow-hidden overflow-ellipsis whitespace-nowrap text-xs">
+                <p className="overflow-hidden overflow-ellipsis whitespace-nowrap text-xs sm:text-lg">
                   {e.title}
                 </p>
               </div>
@@ -94,8 +94,8 @@ const App = () => {
             { key: "volume", value: volumeRange, onChange: handleVolumeChange },
           ].map((slider) => {
             return (
-              <div key={slider.key} className="flex px-2 my-1 items-center gap-2">
-                <p className="hidenn sm:visible">{slider.key[0]}</p>
+              <div key={slider.key} className="flex mx-2 my-1 items-center gap-2">
+                <p>{slider.key[0]}</p>
                 <Slider value={slider.value} onChange={slider.onChange} step={0.1} />
               </div>
             );

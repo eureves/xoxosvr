@@ -21,13 +21,17 @@ function SongRequest() {
   useEffect(() => {
     if (socket) {
       socket.emit("media:get");
+      socket.emit("player:getVolume");
+      socket.on("player:postVolume", (volume) => {
+        setVolumeRange(volume);
+      });
       socket.on("media:sent", (req) => {
         setMedia(req);
       });
-      socket.on("dashboard:playerVolume", (volume) => {
+      socket.on("player:playerVolume", (volume) => {
         setVolumeRange(volume / 100);
       });
-      socket.on("dashboard:playerProgress", (progress) => {
+      socket.on("player:playerProgress", (progress) => {
         playerRef.current.seekTo(progress, "fraction");
         setProgressRange(progress);
       });
