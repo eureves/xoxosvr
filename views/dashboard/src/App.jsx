@@ -8,11 +8,11 @@ const App = () => {
   const [socket, setSocket] = useState(null);
   const [requests, setRequests] = useState([]);
 
-  const [volumeRange, setVolumeRange] = useState(0);
+  const [volumeRange, setVolumeRange] = useState(+localStorage.getItem("volume"));
   const [progressRange, setProgressRange] = useState(0);
 
   useEffect(() => {
-    const newSocket = io(`http://${window.location.hostname}:8000`);
+    const newSocket = io(`http://localhost:8000`);
     setSocket(newSocket);
     return () => newSocket.close();
   }, [setSocket]);
@@ -36,6 +36,7 @@ const App = () => {
 
   const handleVolumeChange = (volume) => {
     setVolumeRange(volume);
+    localStorage.setItem("volume", volume);
     socket.emit("dashboard:volume", volume);
   };
 

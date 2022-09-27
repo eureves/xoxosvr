@@ -32,7 +32,6 @@ router.get("/oauth/twitch", async (req, res) => {
   }
 
   const accessToken = await exchangeCode(clientId, clientSecret, code.toString(), twitchRedirect);
-
   DataBase.setToken(accessToken);
 
   initChatListener();

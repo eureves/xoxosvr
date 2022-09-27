@@ -9,11 +9,11 @@ function SongRequest() {
   const [media, setMedia] = useState(null);
   const playerRef = useRef(null);
 
-  const [volumeRange, setVolumeRange] = useState(0.5);
+  const [volumeRange, setVolumeRange] = useState(+localStorage.getItem("volume"));
   const [progressRange, setProgressRange] = useState(0);
 
   useEffect(() => {
-    const newSocket = io(`http://${window.location.hostname}:8000`);
+    const newSocket = io(`http://localhost:8000`);
     setSocket(newSocket);
     return () => newSocket.close();
   }, [setSocket]);
@@ -29,6 +29,7 @@ function SongRequest() {
         setMedia(req);
       });
       socket.on("player:playerVolume", (volume) => {
+        localStorage.setItem("volume", volume / 100);
         setVolumeRange(volume / 100);
       });
       socket.on("player:playerProgress", (progress) => {
