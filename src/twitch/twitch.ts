@@ -49,13 +49,13 @@ export const initChatListener = async () => {
     chatClient.say(channel, responseMessage);
   });
 
-  chatClient.onMessage(async (channel, user, message) => {
-    let responseMessage: string;
-    if (message.startsWith("!sr")) {
-      responseMessage = await addRequest(io, user, message, true);
-    } else if (message.startsWith("!vr")) {
-      responseMessage = await addRequest(io, user, message, false);
-    }
-    chatClient.say(channel, responseMessage);
-  });
+  // chatClient.onMessage(async (channel, user, message) => {
+  //   let responseMessage: string;
+  //   if (message.startsWith("!sr")) {
+  //     responseMessage = await addRequest(io, user, message, true);
+  //   } else if (message.startsWith("!vr")) {
+  //     responseMessage = await addRequest(io, user, message, false);
+  //   }
+  //   chatClient.say(channel, responseMessage);
+  // });
 };
