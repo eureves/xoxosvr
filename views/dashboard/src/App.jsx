@@ -48,11 +48,47 @@ const App = () => {
     socket.emit("dashboard:removeRequest", id);
   };
 
+  const createRequests = (requests) => {
+    return (
+      <ul>
+        {requests.map((e) => {
+          return (
+            <li
+              key={e.id}
+              className="flex items-center gap-2 rounded-xl my-1 pr-1 pl-1 text-black text-sm"
+            >
+              <p>{e.hidden ? "S" : "V"}</p>
+              <a className="hidden xxs:block  xxs:shrink-0" href={e.url}>
+                <img
+                  className="object-cover w-8 h-8 sm:w-20 sm:h-20"
+                  src={e.thumbnail}
+                  alt={e.title}
+                />
+              </a>
+              <div className="shrink overflow-hidden">
+                <p className="overflow-hidden overflow-ellipsis">{e.user}</p>
+                <p className="overflow-hidden overflow-ellipsis whitespace-nowrap text-xs">
+                  {e.title}
+                </p>
+              </div>
+              <button
+                className="ml-auto shrink-0 w-9 h-9 text-white rounded-full bg-rose-900 hover:bg-rose-400 hover:text-black"
+                onClick={() => deleteRequest(e.id)}
+              >
+                <p>X</p>
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+    );
+  };
+
   return (
     socket &&
     requests && (
       <>
-        <div className="container mx-auto">
+        <div className="">
           {[
             { key: "progress", value: progressRange, onChange: handleProgressChange },
             { key: "volume", value: volumeRange, onChange: handleVolumeChange },
@@ -64,31 +100,7 @@ const App = () => {
               </div>
             );
           })}
-          <ul>
-            {requests.map((e) => {
-              return (
-                <li
-                  key={e.id}
-                  className="flex items-center gap-2 rounded-xl m-1 pr-1 pl-1 text-black text-sm"
-                >
-                  <p>{e.hidden ? "S" : "V"}</p>
-                  <img
-                    className="object-cover w-8 h-8 sm:w-20 sm:h-20"
-                    src={e.thumbnail}
-                    alt=""
-                  ></img>
-                  <p className="overflow-hidden overflow-ellipsis whitespace-nowrap">{e.title}</p>
-                  <p className="overflow-clip">{e.user}</p>
-                  <button
-                    className="ml-auto shrink-0 w-9 h-9 text-white rounded-full bg-rose-900 hover:bg-rose-400 hover:text-black"
-                    onClick={() => deleteRequest(e.id)}
-                  >
-                    <p>X</p>
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
+          {createRequests(requests)}
         </div>
       </>
     )

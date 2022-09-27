@@ -40,11 +40,12 @@ export const initChatListener = async () => {
 
   const listener = await pubsub.onRedemption(userId, async (message) => {
     let responseMessage: string;
-    if (message.rewardId === "6838e09d-37aa-47de-9920-8fd517b096f1") {
-      responseMessage = await addRequest(io, message.userName, message.message, true);
-    } else if (message.rewardId === "") {
+    if (message.rewardId === process.env.TWITCH_SR_REWARD) {
       responseMessage = await addRequest(io, message.userName, message.message, true);
     }
+    //  else if (message.rewardId === "") {
+    //   responseMessage = await addRequest(io, message.userName, message.message, true);
+    // }
     chatClient.say(channel, responseMessage);
   });
 

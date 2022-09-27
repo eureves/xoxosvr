@@ -6,6 +6,7 @@ declare global {
       TWITCH_CLIENT_SECRET: string;
       CHANNEL_NAME: string;
       TWITCH_REDIRECT_URI: string;
+      TWITCH_SR_REWARD: string;
     }
   }
 }
