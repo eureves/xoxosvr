@@ -52,13 +52,21 @@ function SongRequest() {
         <>
           {media.hidden ? (
             <div
-              className="flex gap-6 h-screen w-screen absolute items-center justify-center"
+              className="flex h-screen w-screen absolute items-center justify-center"
               style={media.hidden ? { visibility: "visible" } : { visibility: "hidden" }}
             >
-              <ProgressIcon size={500} played={progressRange} image={media.imageUrl}></ProgressIcon>
-              <p className="flex text-9xl font-bold text-white text-center drop-shadow-[0_5px_5px_rgba(0,0,0,1)]">
-                {media.title}
-              </p>
+              <div className="flex-shrink-0">
+                <ProgressIcon
+                  size={500}
+                  played={progressRange}
+                  image={media.imageUrl}
+                ></ProgressIcon>
+              </div>
+              <div className="flex h-96">
+                <p className="self-center line-clamp-3 ml-16 text-9xl font-bold text-white drop-shadow-[0_5px_5px_rgba(0,0,0,1)]">
+                  {media.title}
+                </p>
+              </div>
             </div>
           ) : null}
           <ReactPlayer

@@ -3,12 +3,12 @@ import "./Progress.css";
 const ProgressIcon = ({ played, size, image }) => {
   const progress = isNaN(played) ? 0 : played;
   const trackColor = "rgba(0, 0, 0, 0.5";
-  const trackWidth = 15;
+  const trackWidth = size / 15;
   const spinnerSpeed = 1;
   const spinnerMode = false;
   const indicatorColor = "rgba(0, 255, 255, 0.7";
   const indicatorCap = "round";
-  const indicatorWidth = 15;
+  const indicatorWidth = size / 15;
 
   const center = size / 2;
   const radius = center - (trackWidth > indicatorWidth ? trackWidth : indicatorWidth);

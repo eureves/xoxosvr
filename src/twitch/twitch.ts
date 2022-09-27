@@ -34,24 +34,27 @@ export const initChatListener = async () => {
   Bpubsub.connect();
   Bpubsub.onConnect(() => console.log("Pubsub: connected ✅"));
 
-  const listener = await pubsub.onRedemption(userId, (message) => {
-    console.log(message.rewardId);
+  const channel = await twitchApi.users.getMe().then((res) => res.name);
+  const chatClient = new ChatClient({ authProvider, channels: [channel] });
+  await chatClient.connect().then(() => console.log("Chat: connected ✅"));
+
+  const listener = await pubsub.onRedemption(userId, async (message) => {
+    let responseMessage: string;
     if (message.rewardId === "6838e09d-37aa-47de-9920-8fd517b096f1") {
-      addRequest(io, message.userName, message.message, true);
+      responseMessage = await addRequest(io, message.userName, message.message, true);
     } else if (message.rewardId === "") {
-      addRequest(io, message.userName, message.message, false);
+      responseMessage = await addRequest(io, message.userName, message.message, true);
     }
+    chatClient.say(channel, responseMessage);
   });
 
-  // const channel = await twitchApi.users.getMe().then((res) => res.name);
-  // const chatClient = new ChatClient({ authProvider, channels: [channel] });
-  // await chatClient.connect().then(() => console.log("Chat: connected ✅"));
-
-  // chatClient.onMessage((channel, user, message) => {
-  //   if (message.startsWith("!sr")) {
-  //     addRequest(io, user, message, true);
-  //   } else if (message.startsWith("!vr")) {
-  //     addRequest(io, user, message, false);
-  //   }
-  // });
+  chatClient.onMessage(async (channel, user, message) => {
+    let responseMessage: string;
+    if (message.startsWith("!sr")) {
+      responseMessage = await addRequest(io, user, message, true);
+    } else if (message.startsWith("!vr")) {
+      responseMessage = await addRequest(io, user, message, false);
+    }
+    chatClient.say(channel, responseMessage);
+  });
 };

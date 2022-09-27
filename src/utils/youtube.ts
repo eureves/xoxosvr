@@ -3,7 +3,12 @@ import { v4 as uuid } from "uuid";
 import { Server } from "socket.io";
 import DataBase from "../db";
 
-export const addRequest = async (io: Server, user: string, message: string, hidden: boolean) => {
+export const addRequest = async (
+  io: Server,
+  user: string,
+  message: string,
+  hidden: boolean
+): Promise<string> => {
   let requestMessage: string;
 
   const youtubeUrlRegExp = new RegExp(
@@ -38,8 +43,10 @@ export const addRequest = async (io: Server, user: string, message: string, hidd
       });
       io.emit("media:sent", await DataBase.getNextRequest());
       io.emit("dashboard:sendRequests", await DataBase.getRequests());
+      return `@${user}, ${title} добавлен в очередь`;
     } catch (error) {
       console.log(error);
+      return "Видео не найдено";
     }
   }
 };
