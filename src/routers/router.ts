@@ -13,7 +13,7 @@ const twitchRedirect = process.env.TWITCH_REDIRECT_URI;
 const router = Router({});
 
 router.get("/", (req: Request, res: Response) => {
-  res.send("Express + TypeScript Server");
+  res.sendFile(join(__dirname, "public", "home", "index.html"));
 });
 
 router.get("/widget", (req: Request, res: Response) => {
@@ -34,7 +34,7 @@ router.get("/oauth/twitch", async (req, res) => {
   const accessToken = await exchangeCode(clientId, clientSecret, code.toString(), twitchRedirect);
   DataBase.setToken(accessToken);
 
-  initChatListener();
+  await initChatListener();
 
   res.redirect("/");
 });
@@ -43,6 +43,12 @@ router.get("/auth", (req, res) => {
   res.redirect(
     `https://id.twitch.tv/oauth2/authorize?client_id=${process.env.TWITCH_CLIENT_ID}&redirect_uri=${process.env.TWITCH_REDIRECT_URI}&response_type=code&scope=chat:read+chat:edit+channel:read:redemptions`
   );
+});
+
+router.get("/api/1/getuser", async (req, res) => {
+  console.log(await DataBase.getUser());
+
+  res.json(await DataBase.getUser());
 });
 
 export default router;

@@ -3,13 +3,13 @@ import DataBase from "../../db";
 
 const mediaHandler = (io: Server, socket: Socket) => {
   socket.on("media:hasEnded", async () => {
-    await DataBase.removeFromRequests();
+    await DataBase.removeRequest();
     io.emit("dashboard:sendRequests", await DataBase.getRequests());
-    socket.emit("media:sent", await DataBase.getNextRequest());
+    socket.emit("media:sent", await DataBase.getRequest());
   });
 
   socket.on("media:get", async () => {
-    socket.emit("media:sent", await DataBase.getNextRequest());
+    socket.emit("media:sent", await DataBase.getRequest());
   });
 };
 

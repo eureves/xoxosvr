@@ -3,7 +3,7 @@ import { BasicPubSubClient, PubSubClient } from "@twurple/pubsub";
 import { ApiClient } from "@twurple/api";
 import { ChatClient } from "@twurple/chat";
 import DataBase from "../db";
-import { io } from "../index";
+import { ioServer } from "../server";
 import { addRequest } from "../utils/youtube";
 
 const clientId = process.env.TWITCH_CLIENT_ID;
@@ -34,28 +34,29 @@ export const initChatListener = async () => {
   Bpubsub.connect();
   Bpubsub.onConnect(() => console.log("Pubsub: connected ✅"));
 
-  const channel = await twitchApi.users.getMe().then((res) => res.name);
+  const twitchMe = await twitchApi.users.getMe();
+
+  DataBase.setUser({ name: twitchMe.name });
+
+  const channel = twitchMe.name;
   const chatClient = new ChatClient({ authProvider, channels: [channel] });
   await chatClient.connect().then(() => console.log("Chat: connected ✅"));
 
   const listener = await pubsub.onRedemption(userId, async (message) => {
     let responseMessage: string;
     if (message.rewardId === process.env.TWITCH_SR_REWARD) {
-      responseMessage = await addRequest(io, message.userName, message.message, true);
+      responseMessage = await addRequest(ioServer, message.userName, message.message, true);
     }
-    //  else if (message.rewardId === "") {
-    //   responseMessage = await addRequest(io, message.userName, message.message, true);
-    // }
     chatClient.say(channel, responseMessage);
   });
 
-  // chatClient.onMessage(async (channel, user, message) => {
-  //   let responseMessage: string;
-  //   if (message.startsWith("!sr")) {
-  //     responseMessage = await addRequest(io, user, message, true);
-  //   } else if (message.startsWith("!vr")) {
-  //     responseMessage = await addRequest(io, user, message, false);
-  //   }
-  //   chatClient.say(channel, responseMessage);
-  // });
+  chatClient.onMessage(async (channel, user, message) => {
+    let responseMessage: string;
+    if (message.startsWith("!sr")) {
+      responseMessage = await addRequest(ioServer, user, message, true);
+    } else if (message.startsWith("!vr")) {
+      responseMessage = await addRequest(ioServer, user, message, false);
+    }
+    chatClient.say(channel, responseMessage);
+  });
 };

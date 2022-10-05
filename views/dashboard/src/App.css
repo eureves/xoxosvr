@@ -6,4 +6,9 @@
 * {
   margin: 0;
   font-family: "Comfortaa", cursive;
+  color: white;
+}
+
+body {
+  background-color: #1f1e1f;
 }

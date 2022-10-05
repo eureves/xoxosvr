@@ -13,6 +13,11 @@ interface IRequest {
   thumbnail: string;
 }
 
+interface IConfig {
+  modifiers: { ctrl: boolean; shift: boolean };
+  keys: string;
+}
+
 class DataBase {
   private db: JsonDB;
   private static instance: DataBase;
@@ -40,7 +45,7 @@ class DataBase {
     }
   }
 
-  public async getNextRequest(): Promise<IRequest> | null {
+  public async getRequest(): Promise<IRequest> | null {
     if ((await this.db.count("/requests")) !== 0) {
       return this.db.getObject<IRequest>("/requests[0]");
     } else {
@@ -52,16 +57,41 @@ class DataBase {
     await this.db.push("/requests[]", request);
   }
 
-  public async removeFromRequests(id?: string) {
-    if (id) {
-      await this.db.delete("/requests[" + (await this.db.getIndex("/requests", id)) + "]");
-    } else {
+  public async removeRequest(id?: string) {
+    if (await this.db.count("/requests")) {
+      if (id) {
+        await this.db.delete("/requests[" + (await this.db.getIndex("/requests", id)) + "]");
+      }
       await this.db.delete("/requests[0]");
     }
   }
 
   public async getRequests(): Promise<IRequest[]> {
     return this.db.getData("/requests");
+  }
+
+  public async setUser(user: { name: string }) {
+    await this.db.push("/user", user);
+  }
+
+  public async getUser(): Promise<{ name: string } | null> {
+    try {
+      return await this.db.getData("/user");
+    } catch (error) {
+      return null;
+    }
+  }
+
+  public async setConfig(config: IConfig) {
+    await this.db.push("/config", config);
+  }
+
+  public async getConfig(): Promise<IConfig> {
+    try {
+      return await this.db.getObject<IConfig>("/config");
+    } catch (error) {
+      console.log(`${error} - missing token`);
+    }
   }
 }
 

@@ -41,7 +41,7 @@ export const addRequest = async (
         imageUrl: bestThumbnail.url,
         thumbnail: thumbnails[thumbnails.length - 1].url,
       });
-      io.emit("media:sent", await DataBase.getNextRequest());
+      io.emit("media:sent", await DataBase.getRequest());
       io.emit("dashboard:sendRequests", await DataBase.getRequests());
       return `@${user}, ${title} добавлен в очередь`;
     } catch (error) {

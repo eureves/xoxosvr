@@ -4,12 +4,22 @@ import Slider from "rc-slider";
 import "./App.css";
 import "rc-slider/assets/index.css";
 
+const serverUrl = "http://localhost:8000";
+
 const App = () => {
   const [socket, setSocket] = useState(null);
   const [requests, setRequests] = useState([]);
+  const [playing, setPlaying] = useState(true);
 
   const [volumeRange, setVolumeRange] = useState(+localStorage.getItem("volume"));
   const [progressRange, setProgressRange] = useState(0);
+
+  useEffect(() => {
+    fetch(serverUrl + "/api/1/requests")
+      .then((res) => res.json())
+      .then((res) => setRequests(res))
+      .catch((err) => console.log(err));
+  }, []);
 
   useEffect(() => {
     const newSocket = io(`http://localhost:8000`);
@@ -19,7 +29,6 @@ const App = () => {
 
   useEffect(() => {
     if (socket) {
-      socket.emit("dashboard:getRequests");
       socket.on("dashboard:sendRequests", (requests) => {
         console.log(requests);
         setRequests(requests);
@@ -40,12 +49,17 @@ const App = () => {
     socket.emit("dashboard:volume", volume);
   };
 
+  const handlePlayPause = () => {
+    setPlaying((state) => !state);
+    socket.emit("dashboard:playing", playing);
+  };
+
   const handleProgressChange = (progress) => {
     setProgressRange(progress);
     socket.emit("dashboard:progress", progress);
   };
 
-  const deleteRequest = (id) => {
+  const deleteRequest = (id = null) => {
     socket.emit("dashboard:removeRequest", id);
   };
 
@@ -73,7 +87,7 @@ const App = () => {
                 </p>
               </div>
               <button
-                className="ml-auto shrink-0 w-9 h-9 text-white rounded-full bg-rose-900 hover:bg-rose-400 hover:text-black"
+                className="ml-auto shrink-0 w-9 h-9 rounded-full bg-rose-900 hover:bg-rose-400 hover:text-black"
                 onClick={() => deleteRequest(e.id)}
               >
                 <p>X</p>
@@ -89,18 +103,25 @@ const App = () => {
     socket &&
     requests && (
       <>
-        <div className="">
-          {[
-            { key: "progress", value: progressRange, onChange: handleProgressChange },
-            { key: "volume", value: volumeRange, onChange: handleVolumeChange },
-          ].map((slider) => {
-            return (
-              <div key={slider.key} className="flex mx-2 my-1 items-center gap-2">
-                <p>{slider.key[0]}</p>
-                <Slider value={slider.value} onChange={slider.onChange} step={0.1} />
-              </div>
-            );
-          })}
+        <div>
+          <div className="flex gap-2 mx-2">
+            <div className="flex flex-col text-center cursor-pointer">
+              <p onClick={() => handlePlayPause()}>{!playing ? "Stop" : "Play"}</p>
+              <p onClick={() => deleteRequest()}>Skip</p>
+            </div>
+            <div className="flex flex-col gap-2 flex-1 shrink justify-center">
+              {[
+                { key: "progress", value: progressRange, onChange: handleProgressChange },
+                { key: "volume", value: volumeRange, onChange: handleVolumeChange },
+              ].map((slider) => {
+                return (
+                  <div key={slider.key} className="flex items-center gap-2 ">
+                    <Slider value={slider.value} onChange={slider.onChange} step={0.1} />
+                  </div>
+                );
+              })}
+            </div>
+          </div>
           {createRequests(requests)}
         </div>
       </>

@@ -7,9 +7,9 @@ const dashboardHandler = (io: Server, socket: Socket) => {
   });
 
   socket.on("dashboard:removeRequest", async (id: string) => {
-    await DataBase.removeFromRequests(id);
+    await DataBase.removeRequest(id);
     socket.emit("dashboard:sendRequests", await DataBase.getRequests());
-    io.emit("media:sent", await DataBase.getNextRequest());
+    io.emit("media:sent", await DataBase.getRequest());
   });
 
   socket.on("dashboard:volume", (volume = 0.25) => {
@@ -22,6 +22,10 @@ const dashboardHandler = (io: Server, socket: Socket) => {
 
   socket.on("player:progressChange", (progress) => {
     io.emit("dashboard:progressChange", progress * 100);
+  });
+
+  socket.on("dashboard:playing", (playing) => {
+    io.emit("player:playing", playing);
   });
 };
 
