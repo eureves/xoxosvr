@@ -10,5 +10,7 @@ How to use?
 4. Build server and start (with ```start.ps1``` script or ```yarn build && yarn start```).
 
 At localhost:8000/ is homepage (WIP). Login with twitch.
+
 At localhost:8000/widget is the media widget, add it to the scene in OBS as the Browser source.
+
 At localhost:8000/dashboard is the dashboard, you can add it as the doc in OBS, or just use it in the browser.
