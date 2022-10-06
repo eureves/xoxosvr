@@ -61,8 +61,9 @@ class DataBase {
     if (await this.db.count("/requests")) {
       if (id) {
         await this.db.delete("/requests[" + (await this.db.getIndex("/requests", id)) + "]");
+      } else {
+        await this.db.delete("/requests[0]");
       }
-      await this.db.delete("/requests[0]");
     }
   }
 

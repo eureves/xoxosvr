@@ -9,9 +9,9 @@ const serverUrl = "http://localhost:8000";
 const App = () => {
   const [socket, setSocket] = useState(null);
   const [requests, setRequests] = useState([]);
-  const [playing, setPlaying] = useState(true);
+  const [playing, setPlaying] = useState(false);
 
-  const [volumeRange, setVolumeRange] = useState(+localStorage.getItem("volume"));
+  const [volumeRange, setVolumeRange] = useState(localStorage.getItem("volume"));
   const [progressRange, setProgressRange] = useState(0);
 
   useEffect(() => {
@@ -45,7 +45,7 @@ const App = () => {
 
   const handleVolumeChange = (volume) => {
     setVolumeRange(volume);
-    localStorage.setItem("volume", volume);
+    localStorage.setItem("volume", +volume);
     socket.emit("dashboard:volume", volume);
   };
 
@@ -106,7 +106,7 @@ const App = () => {
         <div>
           <div className="flex gap-2 mx-2">
             <div className="flex flex-col text-center cursor-pointer">
-              <p onClick={() => handlePlayPause()}>{!playing ? "Stop" : "Play"}</p>
+              <p onClick={() => handlePlayPause()}>{playing ? "Play" : "Stop"}</p>
               <p onClick={() => deleteRequest()}>Skip</p>
             </div>
             <div className="flex flex-col gap-2 flex-1 shrink justify-center">
