@@ -19,12 +19,14 @@ function App() {
       .catch((err) => {
         console.log(err);
       });
+  }, []);
 
+  useEffect(() => {
     fetch(serverUrl + "/api/1/config")
       .then((res) => res.json())
       .then((res) => setKeysPressed(res))
       .catch((err) => console.log(err));
-  }, []);
+  }, [user]);
 
   const keyPressHandler = useCallback((e: globalThis.KeyboardEvent) => {
     setKeysPressed((state) => {
@@ -68,17 +70,19 @@ function App() {
           <button className="p-1 bg-purple-800 rounded text-white">Login with Twitch</button>
         </a>
       )}
-      <div className="flex mx-auto w-2/3 gap-4 justify-between rounded bg-slate-400 p-2 items-center">
-        <span className="flex-1">Skip request</span>
-        <button className="rounded p-2 bg-slate-600" onClick={handleEditKeyComb}>
-          {editingKeys ? "Save" : "Edit"}
-        </button>
-        <div className="rounded p-2 bg-slate-600">
-          {keysPressed.modifiers.ctrl && "ctrl+"}
-          {keysPressed.modifiers.shift && "shift+"}
-          {keysPressed.keys}
+      {user && (
+        <div className="flex mx-auto w-2/3 gap-4 justify-between rounded bg-slate-400 p-2 items-center">
+          <span className="flex-1">Skip request</span>
+          <button className="rounded p-2 bg-slate-600" onClick={handleEditKeyComb}>
+            {editingKeys ? "Save" : "Edit"}
+          </button>
+          <div className="rounded p-2 bg-slate-600">
+            {keysPressed.modifiers.ctrl && "ctrl+"}
+            {keysPressed.modifiers.shift && "shift+"}
+            {keysPressed.keys}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

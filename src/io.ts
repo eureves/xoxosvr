@@ -3,7 +3,6 @@ import registerMediaHandler from "./sockets/handlers/mediaHandler";
 import registerDashboardHandler from "./sockets/handlers/dashboardHandler";
 import type { Server } from "http";
 import HKL from "./utils/keylistener";
-import DataBase from "./db";
 
 export const createIoServer = (server: Server) => {
   const io = new IOServer(server, {
@@ -13,8 +12,9 @@ export const createIoServer = (server: Server) => {
   const onConnection = async (socket: Socket) => {
     registerMediaHandler(io, socket);
     registerDashboardHandler(io, socket);
-    const config = await DataBase.getConfig();
-    HKL.getInstance(config, io, socket).addListener();
+    socket.on("keyHandler", () => {
+      HKL.getInstance(io, socket).addListener();
+    });
   };
 
   io.on("connection", onConnection);

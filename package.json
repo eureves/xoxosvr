@@ -33,7 +33,7 @@
     "install:front": "yarn --cwd ./views/dashboard install && yarn --cwd ./views/svrwidget install ",
     "start": "node --experimental-specifier-resolution=node dist/index.js",
     "start:front": "concurrently \"yarn --cwd ./views/dashboard start\" \"yarn --cwd ./views/home start\" \"yarn --cwd ./views/svrwidget start\"",
-    "build:front": "yarn --cwd ./views/dashboard build && yarn --cwd ./views/svrwidget build",
+    "build:front": "yarn --cwd ./views/dashboard build && yarn --cwd ./views/svrwidget build && yarn --cwd ./views/home build",
     "dev": "concurrently \"tsc --watch\" \"nodemon -i data.json -q --experimental-specifier-resolution=node dist/index.js\""
   }
 }

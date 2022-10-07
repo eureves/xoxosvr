@@ -19,23 +19,15 @@ class HotkeyListener {
   private static socket: Socket;
   private static instance: HotkeyListener;
 
-  constructor(config: IConfig, io: Server, socket: Socket) {
+  constructor(io: Server, socket: Socket) {
     this.listener = new GlobalKeyboardListener();
-    HotkeyListener.config = config;
     HotkeyListener.io = io;
     HotkeyListener.socket = socket;
     HotkeyListener.instance = this;
   }
 
   private keyHandler = (e: IGlobalKeyEvent, down: IGlobalKeyDownMap): IGlobalKeyResult => {
-    if (
-      e.state === "DOWN" &&
-      e.name === HotkeyListener.config.keys
-      // down["LEFT CTRL"] &&
-      // HotkeyListener.config.modifiers.ctrl &&
-      // down["LEFT SHIFT"] &&
-      // HotkeyListener.config.modifiers.shift
-    ) {
+    if (e.state === "DOWN" && e.name === HotkeyListener.config.keys) {
       this.removeFromQueue();
       return true;
     }
@@ -53,15 +45,18 @@ class HotkeyListener {
   };
 
   public static getInstance(
-    config: IConfig = HotkeyListener.config,
     io: Server = HotkeyListener.io,
     socket: Socket = HotkeyListener.socket
   ): HotkeyListener {
-    if (!HotkeyListener.instance) this.instance = new HotkeyListener(config, io, socket);
+    if (!HotkeyListener.instance) this.instance = new HotkeyListener(io, socket);
+    console.log(HotkeyListener.io);
+
     return HotkeyListener.instance;
   }
 
   public async addListener() {
+    console.log("adding listener");
+
     if (this.listener) this.listener.removeListener(this.keyHandler);
     HotkeyListener.config = await DataBase.getConfig();
     this.listener.addListener(this.keyHandler);

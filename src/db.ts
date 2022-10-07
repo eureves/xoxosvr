@@ -35,6 +35,7 @@ class DataBase {
   public async setToken(userToken: AccessToken) {
     await this.db.push("/userToken", userToken);
     await this.db.push("/requests", []);
+    await this.db.push("/config", { modifiers: { ctrl: false, shift: false }, keys: "F8" });
   }
 
   public async getToken(): Promise<AccessToken> {

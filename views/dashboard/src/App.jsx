@@ -8,6 +8,7 @@ const serverUrl = "http://localhost:8000";
 
 const App = () => {
   const [socket, setSocket] = useState(null);
+  const [user, setUser] = useState(null);
   const [requests, setRequests] = useState([]);
   const [playing, setPlaying] = useState(false);
 
@@ -15,11 +16,20 @@ const App = () => {
   const [progressRange, setProgressRange] = useState(0);
 
   useEffect(() => {
+    fetch(serverUrl + "/api/1/user")
+      .then((res) => res.json())
+      .then((res) => setUser(res))
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+  useEffect(() => {
     fetch(serverUrl + "/api/1/requests")
       .then((res) => res.json())
       .then((res) => setRequests(res))
       .catch((err) => console.log(err));
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     const newSocket = io(`http://localhost:8000`);
@@ -29,6 +39,7 @@ const App = () => {
 
   useEffect(() => {
     if (socket) {
+      socket.emit("keyHandler");
       socket.on("dashboard:sendRequests", (requests) => {
         console.log(requests);
         setRequests(requests);
@@ -101,6 +112,7 @@ const App = () => {
 
   return (
     socket &&
+    user &&
     requests && (
       <>
         <div>
