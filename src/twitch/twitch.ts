@@ -36,7 +36,7 @@ export const initChatListener = async () => {
 
   const twitchMe = await twitchApi.users.getMe();
 
-  DataBase.setUser({ name: twitchMe.name });
+  await DataBase.setUser({ name: twitchMe.name });
 
   const channel = twitchMe.name;
   const chatClient = new ChatClient({ authProvider, channels: [channel] });

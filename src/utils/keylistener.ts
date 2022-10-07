@@ -35,8 +35,6 @@ class HotkeyListener {
 
   private removeFromQueue = () => {
     const removeFromQueueBind = async () => {
-      console.log("removing");
-
       await DataBase.removeRequest();
       HotkeyListener.io.emit("dashboard:sendRequests", await DataBase.getRequests());
       HotkeyListener.io.emit("media:sent", await DataBase.getRequest());
@@ -49,14 +47,10 @@ class HotkeyListener {
     socket: Socket = HotkeyListener.socket
   ): HotkeyListener {
     if (!HotkeyListener.instance) this.instance = new HotkeyListener(io, socket);
-    console.log(HotkeyListener.io);
-
     return HotkeyListener.instance;
   }
 
   public async addListener() {
-    console.log("adding listener");
-
     if (this.listener) this.listener.removeListener(this.keyHandler);
     HotkeyListener.config = await DataBase.getConfig();
     this.listener.addListener(this.keyHandler);
