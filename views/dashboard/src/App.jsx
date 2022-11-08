@@ -97,12 +97,15 @@ const App = () => {
                   {e.title}
                 </p>
               </div>
-              <button
-                className="ml-auto shrink-0 w-9 h-9 rounded-full bg-rose-900 hover:bg-rose-400 hover:text-black"
-                onClick={() => deleteRequest(e.id)}
-              >
-                <p>X</p>
-              </button>
+              <div className="flex items-center ml-auto shrink-0 ">
+                <p className="mr-2">{e.duration}</p>
+                <button
+                  className="w-7 h-7 rounded-full bg-rose-900 hover:bg-rose-400 hover:text-black"
+                  onClick={() => deleteRequest(e.id)}
+                >
+                  <p>X</p>
+                </button>
+              </div>
             </li>
           );
         })}
@@ -117,7 +120,7 @@ const App = () => {
       <>
         <div>
           <div className="flex gap-2 mx-2">
-            <div className="flex flex-col text-center cursor-pointer">
+            <div className="flex flex-col text-center cursor-pointer justify-center">
               <p onClick={() => handlePlayPause()}>{playing ? "Play" : "Stop"}</p>
               <p onClick={() => deleteRequest()}>Skip</p>
             </div>
@@ -128,6 +131,7 @@ const App = () => {
               ].map((slider) => {
                 return (
                   <div key={slider.key} className="flex items-center gap-2 ">
+                    <p className="mr-1">{slider.key[0]}</p>
                     <Slider value={slider.value} onChange={slider.onChange} step={0.1} />
                   </div>
                 );
